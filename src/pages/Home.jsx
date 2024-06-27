@@ -19,10 +19,10 @@ function Home() {
           <a href={config.email}>
             <FiMail className="icon" />
           </a>
-          <a href="#">
+          <a href={config.linkedin}>
             <FiLinkedin className="icon" />
           </a>
-          <a href="#">
+          <a href={config.github}>
             <FiGithub className="icon" />
           </a>
         </div>
