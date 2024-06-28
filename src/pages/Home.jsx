@@ -31,7 +31,7 @@ function Home() {
 
   return (
     <div className="h-screen flex ">
-      <div className=" md:max-w-[800px] max-w-[375px] m-auto lg:px-0 px-5 2x">
+      <div className=" md:max-w-[800px] max-w-[375px] md:m-auto lg:px-0 px-5 2x my-10">
         <div className="flex l md:flex-row flex-col md:gap-10 gap-5 md:items-end items-start">
           <div className=" w-[260px] h-[260px] rounded-full flex justify-center items-center border-2  border-black">
             <img
@@ -51,7 +51,7 @@ function Home() {
         </div>
         <p className="text-lg py-3 font-medium">{config.description}</p>
 
-        <div className="flex gap-3 flex-wrap pt-2">
+        <div className="flex gap-3 flex-wrap pt-2 pb-10">
           {pages.map((page, i) => {
             return (
               <a
