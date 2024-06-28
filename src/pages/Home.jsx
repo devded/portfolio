@@ -1,37 +1,69 @@
-import React from "react";
-import '../css/Home.css';
-import config from '../config.json';
-import { FiLinkedin, FiMail, FiFileText, FiGithub } from "react-icons/fi";
+import config from "../config.json";
+import SocialLink from "../components/SocialLinks/SocialLink";
 
 function Home() {
+  const pages = [
+    {
+      name: "Papers",
+      link: "/paper",
+    },
+    {
+      name: "Courses",
+      link: "",
+    },
+    {
+      name: "Papers",
+      link: "",
+    },
+    {
+      name: "Design",
+      link: "",
+    },
+    {
+      name: "Tags",
+      link: "",
+    },
+    {
+      name: "Archive",
+      link: "",
+    },
+  ];
+
   return (
-    <div>
-      <div className="container">
-        <div>
-          <img className="profile-img" draggable="false" src={config.profile_img} alt={config.name} />
-          <h1 className="name">{config.name}</h1>
-          <p className="description">{config.description}</p>
+    <div className="h-screen flex ">
+      <div className=" md:max-w-[800px] max-w-[375px] m-auto lg:px-0 px-5 2x">
+        <div className="flex l md:flex-row flex-col md:gap-10 gap-5 md:items-end items-start">
+          <div className=" w-[260px] h-[260px] rounded-full flex justify-center items-center border-2  border-black">
+            <img
+              className="w-60 h-60 rounded-full drop-shadow-2xl "
+              draggable="false"
+              src={config.profile_img}
+              alt={config.name}
+            />
+          </div>
+          <div className="md:w-[60%] w-full">
+            <h1 className="text-5xl font-bold">{config.name}</h1>
+            <p className="text-xl py-1 font-medium">
+              Front end Developer | React | MERN stack
+            </p>
+            <SocialLink />
+          </div>
         </div>
-        <div className="social-icons">
-          <a href={config.cv}>
-            <FiFileText className="icon" />
-          </a>
-          <a href={config.email}>
-            <FiMail className="icon" />
-          </a>
-          <a href={config.linkedin}>
-            <FiLinkedin className="icon" />
-          </a>
-          <a href={config.github}>
-            <FiGithub className="icon" />
-          </a>
-        </div>
-        <div className="buttons">
-          <button className="button">Papers</button>
-          <button className="button">Courses</button>
-          <button className="button">Design</button>
-          <button className="button">Tags</button>
-          <button className="button">Archive</button>
+        <p className="text-lg py-3 font-medium">{config.description}</p>
+
+        <div className="flex gap-3 flex-wrap pt-2">
+          {pages.map((page, i) => {
+            return (
+              <a
+                href={page.link}
+                className="py-2 px-3 shadow-2xl rounded-lg bg-[#D6D6D6] hover:b"
+                key={i}
+                title={page.name}
+              >
+                {page.name}
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
