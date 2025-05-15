@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Papers</title>
+    <title>Projects</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -30,59 +30,69 @@
 
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto py-8 px-4">
-        <div id="papers-container" class="space-y-6">
+        <div id="projects-container" class="space-y-6">
             <!-- Cards will be dynamically inserted here -->
         </div>
     </main>
 
-    <script src="js/papers.js"></script>
+    <script src="js/projects.js"></script>
     <script src="js/config.js"></script>
     <script>
-        // Improved function to create a paper card
-        function createPaperCard(paper) {
+        // Improved function to create a project card
+        function createProjectCard(project) {
             return `
                 <article 
                     class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer" 
-                    onclick="openPaperDetails('${paper.url}')"
+                    onclick="openProjectDetails('${project.url}')"
                     role="button"
                     tabindex="0"
-                    aria-label="View details of ${paper.title}"
-                    onkeypress="handleKeyPress(event, '${paper.url}')"
+                    aria-label="View details of ${project.title}"
+                    onkeypress="handleKeyPress(event, '${project.url}')"
                 >
-                    <h2 class="text-xl font-medium mb-4">${paper.title}</h2>
-                    <p class="text-gray-600 mb-4">${paper.description}</p>
-                    <div class="text-gray-500">
-                        ${paper.date} &middot; ${paper.authors}
+                    <h2 class="text-xl font-medium mb-4">${project.title}</h2>
+                    <p class="text-gray-600 mb-4">${project.description}</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray-500">
+                            ${project.date} &middot; ${project.authors}
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="${project.url}" class="text-purple-500 hover:text-purple-700 transition-colors" target="_blank" rel="noopener noreferrer" aria-label="Live Preview">
+                                🔗 Live Preview
+                            </a>
+                            <a href="${project.github || '#'}" class="text-purple-500 hover:text-purple-700 transition-colors" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                                📁 GitHub
+                            </a>
+                        </div>
                     </div>
                 </article>
             `;
         }
 
-        // Render paper cards
-        function renderPapers() {
-            const container = document.getElementById('papers-container');
-            if (!papers || papers.length === 0) {
+        // Render project cards
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            if (!projects || projects.length === 0) {
                 container.innerHTML = `
-                    <p class="text-gray-500 text-center">No papers available at the moment.</p>
+                    <p class="text-gray-500 text-center">No projects available at the moment.</p>
                 `;
                 return;
             }
-            container.innerHTML = papers.map(paper => createPaperCard(paper)).join('');
+            container.innerHTML = projects.map(project => createProjectCard(project)).join('');
         }
 
-        // Handle opening paper details
-        function openPaperDetails(url) {
+        // Handle opening project details
+        function openProjectDetails(url) {
             if (url) {
-                window.open(url, '_blank');
+                window.location.href = url;
             } else {
-                console.error('Paper URL is not provided.');
+                console.error('Project URL is not provided.');
             }
         }
 
-        // Handle keyboard navigation for paper cards
+        // Handle keyboard navigation for project cards
         function handleKeyPress(event, url) {
             if (event.key === 'Enter') {
-                openPaperDetails(url);
+                openProjectDetails(url);
             }
         }
 
@@ -97,13 +107,14 @@
                 link.href = href;
                 link.textContent = tag;
                 link.className = href === currentPage ? 'underline text-purple-500' : 'hover:text-purple-500 transition-colors';
+                link.className = href === currentPage ? 'underline text-purple-500' : 'hover:text-purple-500 transition-colors';
                 container.appendChild(link);
             });
         }
 
         // Initial render
         document.addEventListener('DOMContentLoaded', () => {
-            renderPapers();
+            renderProjects();
             renderNavigationLinks();
         });
     </script>
