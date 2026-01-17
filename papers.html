@@ -6,14 +6,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academic Papers</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Chakra Petch', sans-serif;
+        }
+
+        nav a,
+        .nav-item {
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        article p {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .text-gray-500 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        /* HUD Nav Styles */
+        #navigation-links a {
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        #navigation-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #a855f7;
+            /* Purple-500 */
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        #navigation-links a:hover::after,
+        #navigation-links a.active-nav::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-[#FAFAFA]"
+    style="background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px); background-size: 32px 32px;">
+    <style>
+        ::selection {
+            background-color: #1A1A1A;
+            color: #00FF00;
+        }
+    </style>
     <!-- Navigation -->
     <nav class="border-b px-4 py-4 bg-white">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
@@ -29,11 +92,25 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-5xl mx-auto py-8 px-4">
-        <div id="papers-container" class="space-y-6">
-            <!-- Cards will be dynamically inserted here -->
+    <div class="mb-12 max-w-xl">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-gray-900">Academic Papers</h1>
+        <p class="text-xl text-gray-600 font-light leading-relaxed">
+            Research papers and publications I've authored.
+        </p>
+
+        <!-- Command Line Search -->
+        <div class="mt-8 relative group">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-400 font-mono text-lg">></span>
+            </div>
+            <input type="text" id="search-input"
+                class="block w-full pl-8 pr-3 py-2 border-b-2 border-gray-200 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none focus:border-purple-600 focus:ring-0 sm:text-sm font-mono transition-colors"
+                placeholder="grep 'search papers'..." autocomplete="off">
+            <div class="absolute inset-y-0 right-0 flex items-center">
+                <span class="animate-pulse text-purple-600 font-bold">_</span>
+            </div>
         </div>
-    </main>
+    </div>
 
     <script src="js/papers.js"></script>
     <script src="js/config.js"></script>
@@ -42,16 +119,16 @@
         function createPaperCard(paper) {
             return `
                 <article 
-                    class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer" 
+                    class="bg-white rounded-r-lg border-l-4 border-l-gray-300 border-y border-r border-gray-200 p-6 hover:border-l-purple-600 hover:-translate-y-1 transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-lg" 
                     onclick="openPaperDetails('${paper.url}')"
                     role="button"
                     tabindex="0"
                     aria-label="View details of ${paper.title}"
                     onkeypress="handleKeyPress(event, '${paper.url}')"
                 >
-                    <h2 class="text-xl font-medium mb-4">${paper.title}</h2>
-                    <p class="text-gray-600 mb-4">${paper.description}</p>
-                    <div class="text-gray-500">
+                    <h2 class="text-xl font-medium mb-4 group-hover:text-purple-600 transition-colors">${paper.title}</h2>
+                    <p class="text-gray-600 mb-4 font-light leading-relaxed">${paper.description}</p>
+                    <div class="text-gray-500 text-xs tracking-wider uppercase border-t pt-4 mt-4 border-gray-100">
                         ${paper.date} &middot; ${paper.authors}
                     </div>
                 </article>
@@ -59,16 +136,34 @@
         }
 
         // Render paper cards
-        function renderPapers() {
+        function renderPapers(papersToRender = papers) {
             const container = document.getElementById('papers-container');
-            if (!papers || papers.length === 0) {
+
+            // Clear container first
+            container.innerHTML = '';
+
+            if (!papersToRender || papersToRender.length === 0) {
                 container.innerHTML = `
-                    <p class="text-gray-500 text-center">No papers available at the moment.</p>
+                    <div class="col-span-full py-12 text-center">
+                        <p class="text-gray-400 font-mono text-lg">No matches found for query.</p>
+                        <button onclick="document.getElementById('search-input').value = ''; renderPapers();" class="mt-4 text-purple-600 hover:text-purple-700 underline font-mono text-sm">Clear Search</button>
+                    </div>
                 `;
                 return;
             }
-            container.innerHTML = papers.map(paper => createPaperCard(paper)).join('');
+            container.innerHTML = papersToRender.map(paper => createPaperCard(paper)).join('');
         }
+
+        // Search Logic
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const filtered = papers.filter(p =>
+                p.title.toLowerCase().includes(query) ||
+                p.description.toLowerCase().includes(query) ||
+                p.authors.toLowerCase().includes(query)
+            );
+            renderPapers(filtered);
+        });
 
         // Handle opening paper details
         function openPaperDetails(url) {
@@ -96,7 +191,9 @@
                 const href = `${tag.toLowerCase()}.html`;
                 link.href = href;
                 link.textContent = tag;
-                link.className = href === currentPage ? 'underline text-purple-500' : 'hover:text-purple-500 transition-colors';
+                link.className = href === currentPage
+                    ? 'text-purple-500 font-bold active-nav'
+                    : 'text-gray-600 hover:text-purple-500 transition-colors';
                 container.appendChild(link);
             });
         }
